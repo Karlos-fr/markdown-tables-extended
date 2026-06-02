@@ -1,0 +1,57 @@
+{
+  "name": "markdown-tables-extended",
+  "displayName": "Markdown Tables Extended",
+  "description": "Interactive Markdown preview tables with sticky headers and column filters.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onCommand:markdownTablesExtended.openPreview"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "markdownTablesExtended.openPreview",
+        "title": "Markdown Tables Extended: Open Enhanced Preview"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "markdownTablesExtended.openPreview",
+          "when": "editorLangId == markdown",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "markdownTablesExtended.openPreview",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        }
+      ]
+    },
+    "markdown.markdownItPlugins": true,
+    "markdown.previewStyles": [
+      "./media/preview.css"
+    ],
+    "markdown.previewScripts": [
+      "./media/preview.js"
+    ]
+  },
+  "scripts": {
+    "lint": "node --check src/extension.js && node --check media/preview.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.6.0"
+  }
+}

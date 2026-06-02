@@ -1,0 +1,221 @@
+.markdown-body .mte-table-wrapper {
+  display: inline-block;
+  max-width: 100%;
+  max-height: min(72vh, 780px);
+  overflow: auto;
+  border: 1px solid var(--vscode-panel-border, rgba(128, 128, 128, 0.35));
+  border-radius: 2px;
+  margin: 1rem 0;
+  vertical-align: top;
+}
+
+.markdown-body .mte-table-wrapper table.mte-table {
+  width: max-content;
+  min-width: 0;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: auto;
+  font-size: 0.92em;
+  line-height: 1.35;
+}
+
+.markdown-body .mte-table-wrapper table.mte-table.mte-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.markdown-body table.mte-table th,
+.markdown-body table.mte-table td {
+  min-width: 0;
+  padding: 0.28rem 0.55rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-color: var(--vscode-panel-border, rgba(128, 128, 128, 0.35));
+}
+
+.markdown-body table.mte-table th:not(:last-child),
+.markdown-body table.mte-table td:not(:last-child) {
+  border-right: 1px solid var(--vscode-panel-border, rgba(128, 128, 128, 0.22));
+}
+
+.markdown-body table.mte-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  height: 2.25rem;
+  padding-top: 0.52rem;
+  padding-bottom: 0.52rem;
+  background: #353434;
+  box-shadow: inset 0 -1px 0 var(--vscode-panel-border, rgba(128, 128, 128, 0.35));
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.markdown-body table.mte-table th.mte-filtered {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: -2px;
+}
+
+.markdown-body .mte-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.18rem;
+  min-width: 0;
+  cursor: pointer;
+  padding-right: 0.4rem;
+}
+
+.markdown-body .mte-header-label {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.markdown-body .mte-sort-button,
+.markdown-body .mte-filter-button {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  color: var(--vscode-foreground);
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+  font-size: 0.82em;
+}
+
+.markdown-body .mte-sort-button {
+  color: var(--vscode-descriptionForeground);
+  margin-left: 0.12rem;
+}
+
+.markdown-body table.mte-table th {
+  position: sticky;
+}
+
+.markdown-body .mte-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  bottom: 0;
+  z-index: 4;
+  width: 7px;
+  cursor: col-resize;
+}
+
+.markdown-body .mte-resize-handle::after {
+  position: absolute;
+  top: 0.45rem;
+  right: 3px;
+  bottom: 0.45rem;
+  width: 1px;
+  content: "";
+  background: transparent;
+}
+
+.markdown-body .mte-resize-handle:hover::after,
+.markdown-body table.mte-table.mte-resizing .mte-resize-handle::after {
+  background: var(--vscode-focusBorder);
+}
+
+.markdown-body th.mte-sorted .mte-sort-button {
+  color: var(--vscode-foreground);
+  font-weight: 700;
+}
+
+.markdown-body .mte-sort-button:hover,
+.markdown-body .mte-sort-button:focus-visible,
+.markdown-body .mte-filter-button:hover,
+.markdown-body .mte-filter-button:focus-visible,
+.markdown-body .mte-filter-button[aria-expanded="true"] {
+  border-color: var(--vscode-focusBorder);
+  background: var(--vscode-toolbar-hoverBackground);
+  outline: none;
+}
+
+.mte-filter-popover {
+  position: fixed;
+  z-index: 1000;
+  display: grid;
+  gap: 0.5rem;
+  width: min(20rem, calc(100vw - 2rem));
+  max-height: min(28rem, calc(100vh - 2rem));
+  padding: 0.75rem;
+  overflow: hidden;
+  color: var(--vscode-foreground);
+  background: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border, var(--vscode-panel-border));
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
+}
+
+.mte-filter-popover[hidden] {
+  display: none;
+}
+
+.mte-filter-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.35rem 0.45rem;
+  color: var(--vscode-input-foreground);
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, transparent);
+  border-radius: 4px;
+}
+
+.mte-filter-values {
+  display: grid;
+  gap: 0.25rem;
+  max-height: 16rem;
+  overflow: auto;
+}
+
+.mte-filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 1.6rem;
+}
+
+.mte-filter-option span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mte-filter-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.mte-filter-actions button {
+  padding: 0.35rem 0.6rem;
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mte-filter-actions button:hover {
+  background: var(--vscode-button-hoverBackground);
+}
+
+.mte-filter-actions button.secondary {
+  color: var(--vscode-button-secondaryForeground);
+  background: var(--vscode-button-secondaryBackground);
+}
+
+.mte-filter-empty {
+  padding: 1rem;
+  color: var(--vscode-descriptionForeground);
+  text-align: center;
+}

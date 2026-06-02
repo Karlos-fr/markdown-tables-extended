@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Markdown Tables Extended screenshot</title>
+    <link rel="stylesheet" href="../media/preview.css">
+    <style>
+      :root {
+        --vscode-editor-background: #111111;
+        --vscode-foreground: #d4d4d4;
+        --vscode-descriptionForeground: #9d9d9d;
+        --vscode-focusBorder: #007fd4;
+        --vscode-panel-border: #3a3a3a;
+        --vscode-toolbar-hoverBackground: #2a2d2e;
+        --vscode-editorWidget-background: #202020;
+        --vscode-editorWidget-border: #454545;
+        --vscode-input-background: #1f1f1f;
+        --vscode-input-foreground: #d4d4d4;
+        --vscode-button-background: #0e639c;
+        --vscode-button-foreground: #ffffff;
+        --vscode-button-hoverBackground: #1177bb;
+        --vscode-button-secondaryBackground: #313131;
+        --vscode-button-secondaryForeground: #cccccc;
+      }
+
+      body {
+        margin: 0;
+        color: var(--vscode-foreground);
+        background: var(--vscode-editor-background);
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .markdown-body {
+        box-sizing: border-box;
+        width: 1080px;
+        min-height: 620px;
+        padding: 42px 56px;
+      }
+
+      h1 {
+        margin: 0 0 24px;
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--vscode-panel-border);
+      }
+    </style>
+  </head>
+  <body>
+    <main class="markdown-body">
+      <h1>Table preview</h1>
+      <table class="mte-table">
+        <thead>
+          <tr>
+            <th>Projet</th>
+            <th>Statut</th>
+            <th>Priorite</th>
+            <th>Responsable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Alpha</td><td>En cours</td><td>Haute</td><td>Alice</td></tr>
+          <tr><td>Beta</td><td>Termine</td><td>Moyenne</td><td>Bob</td></tr>
+          <tr><td>Gamma</td><td>En cours</td><td>Basse</td><td>Charlie</td></tr>
+          <tr><td>Delta</td><td>Bloque</td><td>Haute</td><td>Alice</td></tr>
+          <tr><td>Epsilon</td><td>Termine</td><td>Basse</td><td>Dana</td></tr>
+          <tr><td>Zeta</td><td>En cours</td><td>Moyenne</td><td>Bob</td></tr>
+          <tr><td>Eta</td><td>Bloque</td><td>Haute</td><td>Charlie</td></tr>
+          <tr><td>Theta</td><td>Termine</td><td>Moyenne</td><td>Alice</td></tr>
+          <tr><td>Iota</td><td>En cours</td><td>Basse</td><td>Dana</td></tr>
+          <tr><td>Kappa</td><td>Termine</td><td>Haute</td><td>Bob</td></tr>
+          <tr><td>Lambda</td><td>En cours</td><td>Moyenne</td><td>Charlie</td></tr>
+          <tr><td>Mu</td><td>Bloque</td><td>Basse</td><td>Alice</td></tr>
+          <tr><td>Nu</td><td>Termine</td><td>Haute</td><td>Dana</td></tr>
+          <tr><td>Xi</td><td>En cours</td><td>Moyenne</td><td>Bob</td></tr>
+          <tr><td>Omicron</td><td>Termine</td><td>Basse</td><td>Charlie</td></tr>
+          <tr><td>Pi</td><td>Bloque</td><td>Haute</td><td>Alice</td></tr>
+          <tr><td>Rho</td><td>En cours</td><td>Moyenne</td><td>Dana</td></tr>
+          <tr><td>Sigma</td><td>Termine</td><td>Basse</td><td>Bob</td></tr>
+          <tr><td>Tau</td><td>En cours</td><td>Haute</td><td>Charlie</td></tr>
+          <tr><td>Upsilon</td><td>Bloque</td><td>Moyenne</td><td>Dana</td></tr>
+        </tbody>
+      </table>
+    </main>
+    <script src="../media/preview.js"></script>
+  </body>
+</html>
