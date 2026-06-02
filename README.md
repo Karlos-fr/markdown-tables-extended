@@ -72,6 +72,8 @@ Preview scripts are only enabled by VS Code when the workspace and content setti
 
 For very large files, **Open Fast Table View** extracts Markdown tables in memory and renders only the visible rows. This avoids creating thousands of DOM rows at once.
 
+The fast view updates automatically when the source Markdown document changes. Changes are debounced while editing and refreshed immediately on save.
+
 ## Development
 
 ```sh

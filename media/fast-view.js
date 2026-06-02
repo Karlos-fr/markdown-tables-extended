@@ -4,7 +4,7 @@
   const MAX_FILTER_VALUES = 500;
   const MIN_COLUMN_WIDTH = 64;
 
-  const data = JSON.parse(document.getElementById("mte-data").textContent);
+  let data = JSON.parse(document.getElementById("mte-data").textContent);
   const tableSelect = document.getElementById("tableSelect");
   const summary = document.getElementById("summary");
   const header = document.getElementById("header");
@@ -19,13 +19,6 @@
   let viewRows = [];
   let activePopover = null;
 
-  data.tables.forEach((table, index) => {
-    const option = document.createElement("option");
-    option.value = String(index);
-    option.textContent = table.title + " - " + table.rows.length + " rows";
-    tableSelect.appendChild(option);
-  });
-
   tableSelect.addEventListener("change", () => {
     currentTableIndex = Number(tableSelect.value);
     sort = null;
@@ -36,17 +29,24 @@
 
   viewport.addEventListener("scroll", renderRows);
   window.addEventListener("resize", renderRows);
+  window.addEventListener("message", (event) => {
+    if (event.data?.type === "tablesUpdated") {
+      updateData(event.data);
+    }
+  });
 
+  renderTableOptions();
   initializeTable();
 
   function initializeTable() {
     const table = getTable();
+    if (!table) {
+      renderEmptyState();
+      return;
+    }
+
     columnWidths = table.headers.map((headerText, index) => {
-      const contentLength = Math.max(
-        headerText.length,
-        ...table.rows.slice(0, 250).map((row) => String(row[index] || "").length)
-      );
-      return Math.min(420, Math.max(110, contentLength * 8 + 42));
+      return estimateColumnWidth(table, headerText, index);
     });
 
     applyState();
@@ -57,12 +57,84 @@
     return data.tables[currentTableIndex];
   }
 
+  function renderTableOptions() {
+    tableSelect.replaceChildren();
+
+    data.tables.forEach((table, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = table.title + " - " + table.rows.length + " rows";
+      tableSelect.appendChild(option);
+    });
+
+    currentTableIndex = Math.min(currentTableIndex, Math.max(0, data.tables.length - 1));
+    tableSelect.value = String(currentTableIndex);
+  }
+
+  function updateData(nextData) {
+    const previousWidths = columnWidths;
+    const previousStartLine = getTable()?.startLine;
+
+    data = {
+      fileName: nextData.fileName,
+      tables: nextData.tables
+    };
+
+    const matchingIndex = data.tables.findIndex((table) => table.startLine === previousStartLine);
+    currentTableIndex = matchingIndex >= 0 ? matchingIndex : Math.min(currentTableIndex, Math.max(0, data.tables.length - 1));
+    closePopover();
+    renderTableOptions();
+
+    const table = getTable();
+    if (!table) {
+      renderEmptyState();
+      return;
+    }
+
+    columnWidths = table.headers.map((headerText, index) => previousWidths[index] || estimateColumnWidth(table, headerText, index));
+    reconcileStateWithTable(table);
+    applyState();
+  }
+
+  function estimateColumnWidth(table, headerText, index) {
+    const contentLength = Math.max(
+      headerText.length,
+      ...table.rows.slice(0, 250).map((row) => String(row[index] || "").length)
+    );
+    return Math.min(420, Math.max(110, contentLength * 8 + 42));
+  }
+
+  function reconcileStateWithTable(table) {
+    if (sort && sort.columnIndex >= table.headers.length) {
+      sort = null;
+    }
+
+    for (const columnIndex of Array.from(filters.keys())) {
+      if (columnIndex >= table.headers.length) {
+        filters.delete(columnIndex);
+      }
+    }
+  }
+
+  function renderEmptyState() {
+    tableSelect.replaceChildren();
+    header.replaceChildren();
+    rowsLayer.replaceChildren();
+    spacer.style.height = "0";
+    summary.textContent = "No Markdown table found";
+  }
+
   function getGridTemplate() {
     return columnWidths.map((width) => width + "px").join(" ");
   }
 
   function applyState() {
     const table = getTable();
+    if (!table) {
+      renderEmptyState();
+      return;
+    }
+
     viewRows = table.rows.filter((row) => {
       for (const [columnIndex, allowed] of filters.entries()) {
         if (!allowed.has(String(row[columnIndex] || ""))) {

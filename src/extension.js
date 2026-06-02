@@ -2,6 +2,8 @@
 
 const vscode = require("vscode");
 
+const FAST_VIEW_REFRESH_DELAY = 400;
+
 function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand("markdownTablesExtended.openPreview", async (uri) => {
@@ -62,6 +64,7 @@ async function openFastTableView(context, uri) {
   );
 
   panel.webview.html = getFastTableHtml(context, panel.webview, document, tables);
+  watchFastTableDocument(panel, document);
 }
 
 async function getMarkdownDocument(uri) {
@@ -188,6 +191,52 @@ function getFastTableHtml(context, webview, document, tables) {
     <script nonce="${nonce}" src="${scriptUri}"></script>
   </body>
 </html>`;
+}
+
+function watchFastTableDocument(panel, document) {
+  let refreshTimer;
+
+  const refresh = () => {
+    const latestDocument = vscode.workspace.textDocuments.find((candidate) => candidate.uri.toString() === document.uri.toString());
+    if (!latestDocument) {
+      return;
+    }
+
+    panel.webview.postMessage({
+      type: "tablesUpdated",
+      fileName: latestDocument.fileName,
+      tables: extractMarkdownTables(latestDocument.getText())
+    });
+  };
+
+  const changeSubscription = vscode.workspace.onDidChangeTextDocument((event) => {
+    if (event.document.uri.toString() !== document.uri.toString()) {
+      return;
+    }
+
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(refresh, FAST_VIEW_REFRESH_DELAY);
+  });
+
+  const saveSubscription = vscode.workspace.onDidSaveTextDocument((savedDocument) => {
+    if (savedDocument.uri.toString() === document.uri.toString()) {
+      clearTimeout(refreshTimer);
+      refresh();
+    }
+  });
+
+  const closeSubscription = vscode.workspace.onDidCloseTextDocument((closedDocument) => {
+    if (closedDocument.uri.toString() === document.uri.toString()) {
+      clearTimeout(refreshTimer);
+    }
+  });
+
+  panel.onDidDispose(() => {
+    clearTimeout(refreshTimer);
+    changeSubscription.dispose();
+    saveSubscription.dispose();
+    closeSubscription.dispose();
+  });
 }
 
 function escapeHtml(value) {
