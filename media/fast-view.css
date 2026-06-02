@@ -1,0 +1,189 @@
+:root {
+  --row-height: 30px;
+  --header-height: 38px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+}
+
+.app {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-editor-background);
+}
+
+select,
+input,
+button {
+  color: var(--vscode-input-foreground);
+  background: var(--vscode-input-background);
+  border: 1px solid var(--vscode-input-border, var(--vscode-panel-border));
+  border-radius: 2px;
+  font: inherit;
+}
+
+select {
+  min-width: 260px;
+  padding: 4px 8px;
+}
+
+button {
+  cursor: pointer;
+}
+
+#summary {
+  color: var(--vscode-descriptionForeground);
+}
+
+.gridShell {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.header {
+  display: grid;
+  height: var(--header-height);
+  overflow: hidden;
+  background: #252525;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.headerCell,
+.cell {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-right: 1px solid var(--vscode-panel-border);
+}
+
+.headerCell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  font-weight: 600;
+}
+
+.headerLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sortButton,
+.filterButton {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  color: var(--vscode-descriptionForeground);
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.sortButton:hover,
+.filterButton:hover {
+  color: var(--vscode-foreground);
+  border-color: var(--vscode-focusBorder);
+}
+
+.resizeHandle {
+  position: absolute;
+  top: 0;
+  right: -3px;
+  bottom: 0;
+  width: 7px;
+  cursor: col-resize;
+}
+
+.resizeHandle:hover {
+  background: color-mix(in srgb, var(--vscode-focusBorder) 45%, transparent);
+}
+
+.viewport {
+  position: relative;
+  height: calc(100vh - var(--header-height) - 43px);
+  overflow: auto;
+}
+
+.spacer {
+  width: 1px;
+}
+
+.rows {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.row {
+  position: absolute;
+  display: grid;
+  height: var(--row-height);
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.filterPopover {
+  position: fixed;
+  z-index: 10;
+  display: grid;
+  gap: 8px;
+  width: 300px;
+  max-height: 420px;
+  padding: 10px;
+  background: var(--vscode-editorWidget-background);
+  border: 1px solid var(--vscode-editorWidget-border, var(--vscode-panel-border));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+.filterValues {
+  display: grid;
+  gap: 4px;
+  max-height: 260px;
+  overflow: auto;
+}
+
+.filterOption {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+
+.filterOption span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filterActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -11,6 +11,7 @@ Adds interactive tables to VS Code's built-in Markdown preview.
 - Multi-value filters with search.
 - Clickable column sorting.
 - Manual column resizing.
+- Fast table view for large Markdown files.
 - Works in the native Markdown preview.
 
 ## Installation
@@ -47,6 +48,12 @@ After installation, open a Markdown file and run:
 Markdown Tables Extended: Open Enhanced Preview
 ```
 
+For large Markdown files, use the memory-backed virtualized table viewer instead:
+
+```text
+Markdown Tables Extended: Open Fast Table View
+```
+
 If sorting, filtering, or resizing controls do not appear, allow scripts in the Markdown preview:
 
 ```text
@@ -62,6 +69,8 @@ Markdown: Change Preview Security Settings
 5. Drag a column border in the header to resize it.
 
 Preview scripts are only enabled by VS Code when the workspace and content settings allow scripts in Markdown previews.
+
+For very large files, **Open Fast Table View** extracts Markdown tables in memory and renders only the visible rows. This avoids creating thousands of DOM rows at once.
 
 ## Development
 

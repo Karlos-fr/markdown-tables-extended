@@ -17,7 +17,8 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:markdownTablesExtended.openPreview"
+    "onCommand:markdownTablesExtended.openPreview",
+    "onCommand:markdownTablesExtended.openFastTableView"
   ],
   "main": "./src/extension.js",
   "contributes": {
@@ -25,6 +26,10 @@
       {
         "command": "markdownTablesExtended.openPreview",
         "title": "Markdown Tables Extended: Open Enhanced Preview"
+      },
+      {
+        "command": "markdownTablesExtended.openFastTableView",
+        "title": "Markdown Tables Extended: Open Fast Table View"
       }
     ],
     "menus": {
@@ -33,11 +38,21 @@
           "command": "markdownTablesExtended.openPreview",
           "when": "editorLangId == markdown",
           "group": "navigation"
+        },
+        {
+          "command": "markdownTablesExtended.openFastTableView",
+          "when": "editorLangId == markdown",
+          "group": "navigation"
         }
       ],
       "explorer/context": [
         {
           "command": "markdownTablesExtended.openPreview",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        },
+        {
+          "command": "markdownTablesExtended.openFastTableView",
           "when": "resourceLangId == markdown",
           "group": "navigation"
         }
@@ -52,7 +67,7 @@
     ]
   },
   "scripts": {
-    "lint": "node --check src/extension.js && node --check media/preview.js",
+    "lint": "node --check src/extension.js && node --check media/preview.js && node --check media/fast-view.js",
     "package": "vsce package"
   },
   "devDependencies": {
