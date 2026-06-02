@@ -5,8 +5,10 @@
   const SORT_ASC_ICON = "\u2191";
   const SORT_DESC_ICON = "\u2193";
   const MIN_COLUMN_WIDTH = 56;
+  const MAX_RENDERED_FILTER_VALUES = 500;
 
   let activePopover = null;
+  let enhanceScheduled = false;
 
   function normalize(value) {
     return value.replace(/\s+/g, " ").trim();
@@ -14,6 +16,18 @@
 
   function enhanceTables() {
     document.querySelectorAll("table.mte-table:not([" + ENHANCED + "])").forEach(enhanceTable);
+  }
+
+  function scheduleEnhanceTables() {
+    if (enhanceScheduled) {
+      return;
+    }
+
+    enhanceScheduled = true;
+    requestAnimationFrame(() => {
+      enhanceScheduled = false;
+      enhanceTables();
+    });
   }
 
   function enhanceTable(table) {
@@ -31,6 +45,8 @@
       table.parentNode.insertBefore(wrapper, table);
       wrapper.appendChild(table);
     }
+
+    ensureColumnGroup(table, headers.length);
 
     const state = {
       filters: new Map(),
@@ -112,19 +128,17 @@
 
     const renderValues = () => {
       const query = normalize(search.value).toLocaleLowerCase();
+      const matchingValues = values.filter((value) => value.toLocaleLowerCase().includes(query));
+      const renderedValues = matchingValues.slice(0, MAX_RENDERED_FILTER_VALUES);
       valuesContainer.replaceChildren();
 
-      values
-        .filter((value) => value.toLocaleLowerCase().includes(query))
-        .forEach((value) => {
-          const id = "mte-filter-" + Math.random().toString(36).slice(2);
+      renderedValues.forEach((value, index) => {
           const option = document.createElement("label");
           option.className = "mte-filter-option";
 
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
           checkbox.checked = selected.has(value);
-          checkbox.id = id;
           checkbox.addEventListener("change", () => {
             if (checkbox.checked) {
               selected.add(value);
@@ -140,6 +154,13 @@
           option.append(checkbox, text);
           valuesContainer.appendChild(option);
         });
+
+      if (matchingValues.length > renderedValues.length) {
+        const more = document.createElement("div");
+        more.className = "mte-filter-empty";
+        more.textContent = matchingValues.length - renderedValues.length + " valeurs masquees. Affinez la recherche.";
+        valuesContainer.appendChild(more);
+      }
 
       if (!valuesContainer.childElementCount) {
         const empty = document.createElement("div");
@@ -239,6 +260,24 @@
     ).sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" }));
   }
 
+  function ensureColumnGroup(table, columnCount) {
+    let columnGroup = table.querySelector("colgroup.mte-colgroup");
+
+    if (!columnGroup) {
+      columnGroup = document.createElement("colgroup");
+      columnGroup.className = "mte-colgroup";
+      table.insertBefore(columnGroup, table.firstChild);
+    }
+
+    while (columnGroup.children.length < columnCount) {
+      columnGroup.appendChild(document.createElement("col"));
+    }
+
+    while (columnGroup.children.length > columnCount) {
+      columnGroup.lastElementChild.remove();
+    }
+  }
+
   function startColumnResize(table, columnIndex, startX) {
     closePopover();
 
@@ -263,17 +302,13 @@
   }
 
   function setColumnWidth(table, columnIndex, width) {
-    const pixelWidth = Math.round(width) + "px";
-    table.querySelectorAll("tr").forEach((row) => {
-      const cell = row.cells[columnIndex];
-      if (!cell) {
-        return;
-      }
+    const column = table.querySelectorAll("colgroup.mte-colgroup col")[columnIndex];
+    if (!column) {
+      return;
+    }
 
-      cell.style.width = pixelWidth;
-      cell.style.minWidth = pixelWidth;
-      cell.style.maxWidth = pixelWidth;
-    });
+    const pixelWidth = Math.round(width) + "px";
+    column.style.width = pixelWidth;
   }
 
   function toggleSort(table, state, columnIndex) {
@@ -347,10 +382,14 @@
     });
   }
 
-  const observer = new MutationObserver(enhanceTables);
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((mutation) => mutation.addedNodes.length)) {
+      scheduleEnhanceTables();
+    }
+  });
   observer.observe(document.body, { childList: true, subtree: true });
 
   window.addEventListener("resize", closePopover);
-  document.addEventListener("DOMContentLoaded", enhanceTables);
-  enhanceTables();
+  document.addEventListener("DOMContentLoaded", scheduleEnhanceTables);
+  scheduleEnhanceTables();
 })();
